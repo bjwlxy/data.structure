@@ -1,0 +1,203 @@
+#include"stdio.h"
+#include"stdlib.h"
+typedef int ElemType;
+typedef struct Node
+{
+	ElemType data;
+	struct Node *next;
+}Node,*LinkList;
+//建立
+void Intlist(LinkList *L)
+{ 
+ *L=(LinkList)malloc(sizeof(Node));
+ (*L)->next=NULL;
+}
+//头插
+void GreatFromHead(LinkList L)
+{
+ Node *s;
+ int  c;
+ int flag=1;
+ while(flag)
+ {
+	 scanf("%d",&c);
+	 if(c!=0)
+	 {
+		 s=(Node *)malloc(sizeof(Node));
+		 s->data=c;
+		 s->next=L->next;
+		 L->next=s;
+	 }
+	 else flag=0;
+ }
+}
+//尾插
+void GreatFromTail(LinkList L)
+{
+ Node *r,*s;
+ int c;
+ int flag=1;
+ r=L;
+ while(flag)
+ {
+	 printf("请输入：");
+    scanf("%d",&c);
+	if(c!=-123)
+	{
+       s=(Node *)malloc(sizeof(Node));
+	   s->data=c;
+	   r->next=s;
+	   r=s;
+	}
+  else
+  {
+	  printf("输入结束\n");
+     flag=0;
+	 r->next=NULL;
+  }
+ }
+}
+//i个节点查找
+Node* Get(LinkList L,int i)
+{ 
+	int j;
+	Node *p;
+	if(i<=0)return NULL;
+	p=L;j=0;
+	while ((p->next!=NULL)&&(j<i))
+	{
+       p=p->next;
+	   j++;
+	}
+	if(i==j) return p;
+	else return NULL;
+}
+//值查找
+Node *Locate(LinkList L,ElemType key)
+{
+  Node *p;
+  p=L->next;
+  
+  while(p!=NULL)
+  {
+	  if(p->data!=key)
+		p=p->next;
+	  else break;
+  }
+  return p;
+}
+//插入
+int InsList(LinkList L,int i,ElemType e)
+{
+	Node *pre,*s;
+	int k;
+	if(i<=0) return 0;
+	pre=L; k=0;
+	while(pre!=NULL&&k<i-1)
+	{
+      pre=pre->next;
+	  k=k+1;
+	}
+   if(pre==NULL)
+   {
+	   printf("插入的位置不合理！");
+	   return 0;
+   }
+   s=(Node *)malloc(sizeof(Node));
+	   s->data=e;
+       s->next=pre->next;
+	   pre->next=s;
+	   return 1;
+}
+//长度
+int ListLength(LinkList L)
+{
+	Node *p;
+	p=L->next;
+	int j=0;
+	while(p!=NULL)
+	{
+		p=p->next;
+		j++;
+	}
+	return j;
+}
+//输出
+void OutList(LinkList L)
+{
+	Node *p;
+	p=L->next;
+	while(p!=NULL)
+	{
+		printf("%d->",p->data);
+		p=p->next;
+	}
+}
+//删除
+int DelList(LinkList L,int i,ElemType *e)
+{
+  Node *pre,*r;
+  int k;
+  pre=L;k=0;
+  while(pre->next!=NULL&&k<i-1)
+  { 
+		pre=pre->next;
+		k=k+1;
+	  }
+	  if(pre->next==NULL)
+	  {
+		  printf("删除的位置不合理！");
+		  return 0;
+	  }
+	 r=pre->next;
+	 pre->next=r->next;
+	 *e=r->data;
+	 free(r);
+	 return 1;
+	}
+void  main()
+{
+	int none;
+	LinkList L;
+	Intlist(&L);//初始化
+	printf("1：输入   2：输出\n3: 查找     4插入\n5: 删除   \n ");
+	printf("\n输入选项>>");
+	scanf("%d",&none);
+	while(none!=1258)
+		{switch(none)
+		{
+		case 1:GreatFromTail(L); break;//尾插
+		case 2:OutList(L);break;//输出
+		case 3:{int key;
+				Node *p;
+				printf("input key");
+				scanf("%d",&key);
+				p=Locate( L,key);
+			   printf("%d",p->data);
+				 }break;//值查找
+		case 4:{int i,e;
+				printf("插入位置：");
+				scanf("%d",&i);
+				printf("插入数值：");
+				scanf("%d",&e);
+				if(InsList(L,i,e))
+					printf("插入成功");
+			   else printf("插入失败");
+			   }break;//插入
+
+		case 5:{
+				int i,e;
+				printf("删除位置：");
+				scanf("%d",&i);
+				
+				if(DelList( L, i, &e))
+					printf("删除成功 删除元素为%d",e);
+			   else printf("删除失败");
+			   }break;//删除 i个
+			
+		default: printf("输入错误 ");
+		}
+	printf("\n输入选项>>");
+	scanf("%d",&none);
+	}
+}

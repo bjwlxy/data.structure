@@ -1,0 +1,83 @@
+#include"stdio.h"
+#include"stdlib.h"
+#include"math.h"
+typedef int KeyType;
+#define m 4
+typedef int Boolean;
+typedef struct Mbtnode
+{
+	struct Mbtnode *parent;
+	int keynum;
+	KeyType key[m + 1];
+	struct Mbtnode *ptr[m + 1];
+}Mbtnode,*Mbtree;
+/*查找关键字为K序号*/int search(Mbtree mbt, KeyType key)
+{
+	int n = mbt->keynum;
+	int i = 1;
+	while (i <= n&&mbt->key[i] <= key) i++;
+	return i - 1;
+}
+/*在mbp->key[ipos+1]上插入key*/void Insert(Mbtree mbp, int ipos, KeyType key, Mbtree rp)
+{
+	for (int j = mbp->keynum; j >= ipos + 1; j--)
+	{
+		mbp->key[j + 1] = mbp->key[j];
+		mbp->ptr[j + 1] = mbp->ptr[j];
+	}
+	mbp->key[ipos + 1] = key;
+	mbp->ptr[ipos + 1] = rp;
+	mbp->keynum++;
+}
+/*B树分裂算法*/void split(Mbtree oldp, Mbtree *newp)
+{
+	int s = ceil((float)m / 2);
+	int n = m - s;
+	*newp = (Mbtree)malloc(sizeof(Mbtnode));
+	(*newp)->keynum = n;
+	(*newp)->parent = oldp->parent;
+	(*newp)->ptr[0] = oldp->ptr[s];
+	for (int i = 0; i <= n; i++)
+	{
+		(*newp)->key[i] = oldp->key[s + i];
+		(*newp)->ptr[i] = oldp->ptr[s + i];
+	}
+	oldp->keynum = s - 1;
+}
+void ins_mbtree(Mbtree *mbt, KeyType k, Mbtree q, int i)
+{
+	Mbtree q1, qp;
+	if (*mbt == NULL)
+	{
+		*mbt = (Mbtree)malloc(sizeof(Mbtnode));
+		(*mbt)->keynum = 1; (*mbt)->parent = NULL;
+		(*mbt)->key[1] = k; (*mbt)->ptr[0] = NULL;
+		(*mbt)->ptr[1] = NULL;
+	}
+	else
+	{
+		int x = k;
+		Mbtree ap = NULL;
+		int finished = NULL;
+		while (q != NULL && !finished)
+		{
+			Insert(q, i, x, ap);
+			if (q->keynum < m) finished = true;
+			else {
+				int s = ceil((float)m / 2);
+				split(q, &q1);
+				x = q->key[s];
+				ap = q1;
+				q = q->parent;
+				if (q != NULL) i = search(q, x);
+			}
+		}
+
+	}
+}
+
+int main()
+{
+
+	return 0;
+}

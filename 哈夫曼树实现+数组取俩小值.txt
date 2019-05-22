@@ -1,0 +1,53 @@
+#include"stdio.h"
+#define N 20
+#define M 2*N-1
+typedef struct
+{
+	int weight;
+	int parent;
+	int LChild;
+	int RChild;
+}HuffmanTree[M + 1];
+void select(HuffmanTree ht, int n, int *s1, int *s2)
+{
+	int i, m1 = ht[0].weight, m2 = ht[1].weight, t;
+	for (i = 1; i <= n; i++)
+	{
+		if (m1 >= ht[i + 1].weight)
+		{
+			t = m1;
+			m1 = ht[i + 1].weight;
+			ht[i + 1].weight = t;
+		}
+		if (m2 >= ht[i + 1].weight)
+		{
+			t = m2;
+			m2 = ht[i + 1].weight;
+			ht[i + 1].weight = t;
+		}
+	}
+	printf("%d \t %d \n", m1, m2);
+}
+void CrtHuffmanTree(HuffmanTree ht, int w[], int n)
+{
+	int i, m, s1, s2;
+	for (i = 1; i <= n; i++)
+		ht[i] = { w[i],0,0,0 };
+	m = 2 * n - 1;
+	for (i = n + 1; i <= m; i++)
+		ht[i] = { 0,0,0,0 };
+
+	for (i = n + 1; i <= m; i++)
+	{
+		select(ht, i - 1, &s1, &s2);
+		ht[i].weight = ht[s1].weight + ht[s2].weight;
+		ht[s1].parent = i; ht[s1].parent = i;
+		ht[i].LChild = s1; ht[i].RChild = s2;
+	}
+}
+int main()
+{
+	HuffmanTree ht;
+	int w[M];
+	return 0;
+}

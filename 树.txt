@@ -1,0 +1,124 @@
+#include"stdio.h"
+#include"stdlib.h"
+typedef char DataType;
+typedef struct Node
+{
+	DataType data;
+	struct Node * LChild;
+	struct Node * RChild;
+}BiTNode, *BiTree;
+//先序序列创建
+void CreateBiTree(BiTree * bt)
+{
+	char ch;
+	ch = getchar();
+	if (ch == '.') *bt = NULL;
+	else
+	{
+		*bt = (BiTree)malloc(sizeof(BiTNode));
+		(*bt)->data = ch;
+		CreateBiTree(&((*bt)->LChild));
+		CreateBiTree(&((*bt)->RChild));
+	}
+}
+//求二叉树的高度
+int PostTreeDepth(BiTree bt)
+{
+	int hl, hr, max;
+	if (bt != NULL)
+	{
+		hl = PostTreeDepth(bt->LChild);
+		hr = PostTreeDepth(bt->RChild);
+		max = hl>hr ? hl : hr;
+		return (max + 1);
+	}
+	else return 0;
+}
+//树状打印
+void PrintfTree(BiTree bt, int nLayer)
+{
+	if (bt == NULL) return;
+	PrintfTree(bt->RChild, nLayer + 1);
+	for (int i = 0; i<nLayer; i++)
+		printf("  ");
+	printf("%c\n", bt->data);
+	PrintfTree(bt->LChild, nLayer + 1);
+}
+//输出叶子节点
+void PreOrder(BiTree root)
+{
+	if (root != NULL)
+	{
+		if (root->LChild == NULL&&root->RChild == NULL)
+			printf("%c ", root->data);
+		PreOrder(root->LChild);
+		PreOrder(root->RChild);
+	}
+}
+void L_Rchange(BiTree root)//左右子树互换
+{
+	if(root!=NULL)
+	{
+		L_Rchange(root->LChild);
+		L_Rchange(root->RChild);
+		BiTree p;
+		p=root->LChild;
+		root->LChild=root->RChild;
+		root->RChild=p;
+	}
+}
+//先序遍历
+void Pre(BiTree root)
+{
+	if (root != NULL)
+	{
+		printf("%c ", root->data);
+		Pre(root->LChild);
+		Pre(root->RChild);
+	}
+}
+void In(BiTree root)
+{
+	if (root != NULL)
+	{
+		Pre(root->LChild);
+		printf("%c ", root->data);
+		Pre(root->RChild);
+	}
+}
+void Post(BiTree root)
+{
+	if (root != NULL)
+	{
+		Pre(root->LChild);
+		Pre(root->RChild);
+		printf("%c ", root->data);
+	}
+}
+int main()
+{
+	BiTNode *S;
+	BiTree root;
+	int De;
+	CreateBiTree(&S);//创建
+	De = PostTreeDepth(S);//深度
+	printf("深度为%d.\n\n", De);
+	PrintfTree(S, De);//打印树
+	root = S;
+	printf("叶子节点：");
+	PreOrder(root);//输出叶子节点
+	printf("\n");
+	printf("先序遍历节点：");
+	Pre(root);
+	printf("\n");//先序遍历
+	printf("中序遍历节点：");
+	In(root);
+	printf("\n");//中序遍历
+	printf("后序遍历节点：");
+	Post(root);
+	printf("\n");//后序遍历
+	printf("\n \n \n \n");
+	L_Rchange(root);//左右子树互换
+	PrintfTree(S, De);
+	return 0;
+}

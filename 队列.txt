@@ -1,0 +1,85 @@
+#include"stdio.h"
+#include"stdlib.h"
+typedef int QueueElementType;
+typedef struct Node
+{
+	QueueElementType data;
+	struct Node *Next;
+}LinkQueueNode;
+typedef struct
+{
+	LinkQueueNode *font;
+	LinkQueueNode *rear;
+}LinkQueue;
+// 将Q初始化空队列
+int InitQueue(LinkQueue *Q)
+{
+	Q->font=(LinkQueueNode *)malloc(sizeof(LinkQueueNode));
+	if(Q->font!=NULL)
+	{
+		Q->rear=Q->font;/* 同时指向头结点*/
+		Q->font->Next=NULL;
+		return 1;
+	}
+	else return 0;  /*溢出*/
+}
+//将X插入到队列Q中
+int EnterQueue(LinkQueue *Q,QueueElementType x)
+{
+	LinkQueueNode *NewNode;
+	NewNode=(LinkQueueNode *)malloc(sizeof(LinkQueueNode));
+	if(NewNode!=NULL)
+	{
+		NewNode->data=x;
+		NewNode->Next=NULL;
+		Q->rear->Next=NewNode;
+		Q->rear=NewNode;
+		return 1;
+	}
+	else 	return 0;
+}
+int DeleteQueue(LinkQueue *Q,QueueElementType *x)
+{
+	LinkQueueNode * p;
+	if(Q->font==Q->rear)
+		return 0;
+	p=Q->font->Next;
+	Q->font->Next=p->Next;
+	if(Q->rear==p)
+		Q->rear=Q->font;
+	*x=p->data;
+	printf("%d",*x);
+	free(p);
+	return 1;
+}
+int main()
+{
+	int x,a;
+	LinkQueue S;
+	InitQueue(&S);
+	printf("请输入选项： ");
+	scanf("%d",&a);
+	while(1)
+	{
+		if(a==0)
+			break;
+		switch(a)
+		{
+			case 1:
+				{
+					while(1)
+					{
+						scanf("%d",&x);
+						if(x==0)
+							break;
+						EnterQueue(&S,x);
+					}
+				}break;
+			case 2: {
+					DeleteQueue(&S,&x);
+					};break;
+			default : printf("error");
+		}printf("请输入选项： ");
+		scanf("%d",&a);
+	}return 0;
+}

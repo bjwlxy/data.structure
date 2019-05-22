@@ -1,0 +1,41 @@
+#include"stdio.h"
+#define MAXLEN 40
+#include"string.h"
+typedef struct
+{
+   char ch[MAXLEN];
+   int len;
+}SString;
+//生成
+int StrAssign(SString *S,char s[])
+{  
+	int i;
+    int t=strlen(s);
+	for(i=0;i<t;i++)
+		S->ch[i]=s[i];
+	S->len=t;
+	return t;
+}
+void main()
+{   
+	int a;
+	SString S;
+	char s[40];
+	printf("1.Assign \n");
+	printf("In Put Number:");
+	scanf("%d",&a);
+	getchar();
+	if(a!=0)
+	{
+	switch(a)
+	{
+	case 1:{
+         	gets(s);
+	       StrAssign(&S,s);
+           puts(s);
+           printf("长度为：%d\n",StrAssign(&S,s));
+		   } break;
+		 
+	}
+	}
+}

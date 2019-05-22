@@ -1,0 +1,44 @@
+#include"stdio.h"
+#define MAXLEN 40
+typedef struct {
+	char ch[MAXLEN];
+	int len;
+}String;
+void get_next(String *T,int  *next)
+{
+	int i,j;
+	i=1;
+	next[i]=0;
+	j=0;
+	while(i<=T->len)
+	{
+		if(j==0||T->ch[i]==T->ch[j])
+		{++i;++j;next[i]=j;}
+	
+	else 
+		j=next[j];
+	 }
+}
+int KMP(String *S,String *T,int *next,int pos)
+{
+	int i,j;
+	i=pos;
+	j=1;
+	while(i<=S->len&&j<=T->len)
+	{
+		if(j==0||T->ch[i]==T->ch[j])
+		{++i;++j;}
+		else 
+			j=next[j];
+	}
+	if(j<T->len) return (i-T->len);
+	else return 0;
+}
+void main()
+{
+	int pos;
+	String S,T;
+	int next[40];
+	get_next(&T,next);
+	KMP(&S,&T,next, pos);
+}
